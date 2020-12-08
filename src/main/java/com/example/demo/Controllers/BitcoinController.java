@@ -2,10 +2,15 @@ package com.example.demo.Controllers;
 
 import com.example.demo.Entities.Bitcoin;
 import com.example.demo.Repositories.BitcoinRepository;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BitcoinController {
     private BitcoinRepository bitcoinRepository = new BitcoinRepository();
@@ -18,13 +23,32 @@ public class BitcoinController {
     }
 
     public Bitcoin getAllTimeMax() {
-        List<Bitcoin>bitcoins = bitcoinRepository.getAll();
+        List<Bitcoin> bitcoins = bitcoinRepository.getAll();
         bitcoins.sort(new Sorter());
         return bitcoins.get(0);
     }
 
-    public Bitcoin getActual() {
-       return bitcoinRepository.getAll().get(bitcoinRepository.getAll().size()-1);
+    public Bitcoin getLast() {
+        return bitcoinRepository.getAll().get(bitcoinRepository.getAll().size() - 1);
+    }
+
+    public Bitcoin getActual() throws IOException {
+        String webPage = "https://api.coindesk.com/v1/bpi/currentprice.json";
+        String json = new Scanner(new URL(webPage).openStream(), "UTF-8").useDelimiter("\\A").next();
+        Pattern pattern = Pattern.compile("(\"rate.*Dollar\")");
+        Matcher matcher = pattern.matcher(json);
+        json = json.replaceAll("(\"rate.*Dollar\")", "");
+
+        if (matcher.find())
+            json = matcher.group(1);
+
+        json = json.replaceAll(",\".*", "");
+        json = json.replaceAll("\"|\\,", "");
+        json = json.replaceAll("rate", "\"price\"");
+        json = "{\"date\":\"" + getLast().getDate() + "\"," + json + "}";
+        Gson gson = new Gson();
+        Bitcoin bitcoin = gson.fromJson(json, Bitcoin.class);
+        return bitcoin;
     }
 
     class Sorter implements Comparator<Bitcoin> {

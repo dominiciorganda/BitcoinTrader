@@ -26,8 +26,13 @@ public class BitcoinService {
         return bitcoinController.getAllTimeMax();
     }
 
+    @GetMapping("/getLast")
+    public Bitcoin getLast() {
+        return bitcoinController.getLast();
+    }
+
     @GetMapping("/getActual")
-    public Bitcoin getActual() {
+    public Bitcoin getActual() throws IOException {
         return bitcoinController.getActual();
     }
 
