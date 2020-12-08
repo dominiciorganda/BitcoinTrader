@@ -20,9 +20,17 @@ public class BitcoinService {
     public List<Bitcoin> getAll() {
         return bitcoinController.getAll();
     }
+
     @GetMapping("/getMax")
     public Bitcoin getMax() {
         return bitcoinController.getAllTimeMax();
     }
+
+    @GetMapping("/getActual")
+    public Bitcoin getActual() {
+        return bitcoinController.getActual();
+    }
+
+
 }
 

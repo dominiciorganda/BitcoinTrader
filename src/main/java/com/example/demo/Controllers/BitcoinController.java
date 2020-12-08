@@ -23,6 +23,10 @@ public class BitcoinController {
         return bitcoins.get(0);
     }
 
+    public Bitcoin getActual() {
+       return bitcoinRepository.getAll().get(bitcoinRepository.getAll().size()-1);
+    }
+
     class Sorter implements Comparator<Bitcoin> {
         @Override
         public int compare(Bitcoin o1, Bitcoin o2) {
