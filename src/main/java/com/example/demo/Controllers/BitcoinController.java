@@ -51,6 +51,23 @@ public class BitcoinController {
         return bitcoin;
     }
 
+    public Bitcoin getAnualMax(){
+        String year = getLast().getDate().replaceAll("-.*","");
+        List<Bitcoin> bitcoins = getAll();
+        bitcoins.removeIf(bitcoin -> !bitcoin.getDate().replaceAll("-.*", "").equals(year));
+        bitcoins.sort(new Sorter());
+        return bitcoins.get(0);
+    }
+
+    public Bitcoin getAnualMin(){
+        String year = getLast().getDate().replaceAll("-.*","");
+        List<Bitcoin> bitcoins = getAll();
+        bitcoins.removeIf(bitcoin -> !bitcoin.getDate().replaceAll("-.*", "").equals(year));
+        bitcoins.sort(new Sorter());
+        return bitcoins.get(bitcoins.size()-1);
+    }
+
+
     class Sorter implements Comparator<Bitcoin> {
         @Override
         public int compare(Bitcoin o1, Bitcoin o2) {

@@ -36,6 +36,16 @@ public class BitcoinService {
         return bitcoinController.getActual();
     }
 
+    @GetMapping("getAnualMax")
+    public Bitcoin getAnualMax() {
+        return bitcoinController.getAnualMax();
+    }
+
+    @GetMapping("getAnualMin")
+    public Bitcoin getAnualMin() {
+        return bitcoinController.getAnualMin();
+    }
+
 
 }
 
