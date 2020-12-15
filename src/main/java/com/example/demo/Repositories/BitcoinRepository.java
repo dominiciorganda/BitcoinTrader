@@ -26,6 +26,8 @@ public class BitcoinRepository {
     }
 
     public List<Bitcoin> getAll() {
-        return bitcoinList;
+        List<Bitcoin>bitcoins = new ArrayList<>();
+        bitcoins.addAll(bitcoinList);
+        return bitcoins;
     }
 }

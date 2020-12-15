@@ -16,9 +16,9 @@ public class BitcoinService {
     public BitcoinService() throws IOException {
     }
 
-    @GetMapping("/getAll")
-    public List<Bitcoin> getAll() {
-        return bitcoinController.getAll();
+    @GetMapping("/getLastMonth")
+    public List<Bitcoin> getLastMonth() {
+        return bitcoinController.getLastMonth();
     }
 
     @GetMapping("/getMax")

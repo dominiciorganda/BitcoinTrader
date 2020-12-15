@@ -22,6 +22,7 @@ public class BitcoinController {
         return bitcoinRepository.getAll();
     }
 
+
     public Bitcoin getAllTimeMax() {
         List<Bitcoin> bitcoins = bitcoinRepository.getAll();
         bitcoins.sort(new Sorter());
@@ -65,6 +66,11 @@ public class BitcoinController {
         bitcoins.removeIf(bitcoin -> !bitcoin.getDate().replaceAll("-.*", "").equals(year));
         bitcoins.sort(new Sorter());
         return bitcoins.get(bitcoins.size()-1);
+    }
+
+    public List<Bitcoin> getLastMonth() {
+        List<Bitcoin> bitcoins = bitcoinRepository.getAll();
+        return bitcoins.subList(bitcoins.size()-32, bitcoins.size()-1);
     }
 
 
