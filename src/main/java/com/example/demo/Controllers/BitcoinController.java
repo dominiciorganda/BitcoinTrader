@@ -3,13 +3,17 @@ package com.example.demo.Controllers;
 import com.example.demo.Entities.Bitcoin;
 import com.example.demo.Services.BitcoinService;
 
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
 
+@Api
 @RestController
+@RequestMapping("/BitcoinTrader")
 public class BitcoinController {
 
     private BitcoinService bitcoinService = new BitcoinService();
