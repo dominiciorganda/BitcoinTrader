@@ -1,51 +1,85 @@
 package com.example.demo.Services;
 
-import com.example.demo.Controllers.BitcoinController;
 import com.example.demo.Entities.Bitcoin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.Repositories.BitcoinRepository;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-@RestController
 public class BitcoinService {
-    private BitcoinController bitcoinController = new BitcoinController();
+    private BitcoinRepository bitcoinRepository = new BitcoinRepository();
 
     public BitcoinService() throws IOException {
     }
 
-    @GetMapping("/getLastMonth")
-    public List<Bitcoin> getLastMonth() {
-        return bitcoinController.getLastMonth();
+    public List<Bitcoin> getAll() {
+        return bitcoinRepository.getAll();
     }
 
-    @GetMapping("/getMax")
-    public Bitcoin getMax() {
-        return bitcoinController.getAllTimeMax();
+
+    public Bitcoin getAllTimeMax() {
+        List<Bitcoin> bitcoins = bitcoinRepository.getAll();
+        bitcoins.sort(new Sorter());
+        return bitcoins.get(0);
     }
 
-    @GetMapping("/getLast")
     public Bitcoin getLast() {
-        return bitcoinController.getLast();
+        return bitcoinRepository.getAll().get(bitcoinRepository.getAll().size() - 1);
     }
 
-    @GetMapping("/getActual")
     public Bitcoin getActual() throws IOException {
-        return bitcoinController.getActual();
+        String webPage = "https://api.coindesk.com/v1/bpi/currentprice.json";
+        String json = new Scanner(new URL(webPage).openStream(), "UTF-8").useDelimiter("\\A").next();
+        Pattern pattern = Pattern.compile("(\"rate.*Dollar\")");
+        Matcher matcher = pattern.matcher(json);
+        json = json.replaceAll("(\"rate.*Dollar\")", "");
+
+        if (matcher.find())
+            json = matcher.group(1);
+
+        json = json.replaceAll(",\".*", "");
+        json = json.replaceAll("\"|\\,", "");
+        json = json.replaceAll("rate", "\"price\"");
+        json = "{\"date\":\"" + getLast().getDate() + "\"," + json + "}";
+        Gson gson = new Gson();
+        Bitcoin bitcoin = gson.fromJson(json, Bitcoin.class);
+        return bitcoin;
     }
 
-    @GetMapping("getAnualMax")
-    public Bitcoin getAnualMax() {
-        return bitcoinController.getAnualMax();
+    public Bitcoin getAnualMax(){
+        String year = getLast().getDate().replaceAll("-.*","");
+        List<Bitcoin> bitcoins = getAll();
+        bitcoins.removeIf(bitcoin -> !bitcoin.getDate().replaceAll("-.*", "").equals(year));
+        bitcoins.sort(new Sorter());
+        return bitcoins.get(0);
     }
 
-    @GetMapping("getAnualMin")
-    public Bitcoin getAnualMin() {
-        return bitcoinController.getAnualMin();
+    public Bitcoin getAnualMin()  {
+        String year = getLast().getDate().replaceAll("-.*","");
+        List<Bitcoin> bitcoins = getAll();
+        bitcoins.removeIf(bitcoin -> !bitcoin.getDate().replaceAll("-.*", "").equals(year));
+        bitcoins.sort(new Sorter());
+        return bitcoins.get(bitcoins.size()-1);
     }
 
+    public List<Bitcoin> getLastMonth() {
+        List<Bitcoin> bitcoins = bitcoinRepository.getAll();
+        return bitcoins.subList(bitcoins.size()-32, bitcoins.size());
+    }
+
+
+    class Sorter implements Comparator<Bitcoin> {
+        @Override
+        public int compare(Bitcoin o1, Bitcoin o2) {
+            return (int) (-o1.getPrice() + o2.getPrice());
+        }
+    }
 
 }
 
