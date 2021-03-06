@@ -2,16 +2,16 @@ package com.example.demo.Entities;
 
 
 
-public class Bitcoin {
+public class Coin {
     private String date;
     private double price;
 
-    public Bitcoin(String date, double price) {
+    public Coin(String date, double price) {
         this.date = date;
         this.price = price;
     }
 
-    public Bitcoin() {
+    public Coin() {
     }
 
     public String getDate() {
@@ -32,7 +32,7 @@ public class Bitcoin {
 
     @Override
     public String toString() {
-        return "Bitcoin{" +
+        return "Coin{" +
                 "date=" + date +
                 ", price=" + price +
                 '}';

@@ -1,6 +1,6 @@
 package com.example.demo.Services;
 
-import com.example.demo.Entities.Bitcoin;
+import com.example.demo.Entities.Coin;
 import com.example.demo.Repositories.BitcoinRepository;
 import com.google.gson.Gson;
 
@@ -12,28 +12,28 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BitcoinService {
+public class BitcoinService implements ICoinService {
     private BitcoinRepository bitcoinRepository = new BitcoinRepository();
 
     public BitcoinService() throws IOException {
     }
 
-    public List<Bitcoin> getAll() {
+    public List<Coin> getAll() {
         return bitcoinRepository.getAll();
     }
 
 
-    public Bitcoin getAllTimeMax() {
-        List<Bitcoin> bitcoins = bitcoinRepository.getAll();
-        bitcoins.sort(new Sorter());
-        return bitcoins.get(0);
+    public Coin getAllTimeMax() {
+        List<Coin> coins = bitcoinRepository.getAll();
+        coins.sort(new Sorter());
+        return coins.get(0);
     }
 
-    public Bitcoin getLast() {
+    public Coin getLast() {
         return bitcoinRepository.getAll().get(bitcoinRepository.getAll().size() - 1);
     }
 
-    public Bitcoin getActual() throws IOException {
+    public Coin getActual() throws IOException {
         String webPage = "https://api.coindesk.com/v1/bpi/currentprice.json";
         String json = new Scanner(new URL(webPage).openStream(), "UTF-8").useDelimiter("\\A").next();
         Pattern pattern = Pattern.compile("(\"rate.*Dollar\")");
@@ -48,35 +48,40 @@ public class BitcoinService {
         json = json.replaceAll("rate", "\"price\"");
         json = "{\"date\":\"" + getLast().getDate() + "\"," + json + "}";
         Gson gson = new Gson();
-        Bitcoin bitcoin = gson.fromJson(json, Bitcoin.class);
-        return bitcoin;
+        Coin coin = gson.fromJson(json, Coin.class);
+        return coin;
     }
 
-    public Bitcoin getAnualMax(){
-        String year = getLast().getDate().replaceAll("-.*","");
-        List<Bitcoin> bitcoins = getAll();
-        bitcoins.removeIf(bitcoin -> !bitcoin.getDate().replaceAll("-.*", "").equals(year));
-        bitcoins.sort(new Sorter());
-        return bitcoins.get(0);
+    public Coin getAnualMax() {
+        String year = getLast().getDate().replaceAll("-.*", "");
+        List<Coin> coins = getAll();
+        coins.removeIf(coin -> !coin.getDate().replaceAll("-.*", "").equals(year));
+        coins.sort(new Sorter());
+        return coins.get(0);
     }
 
-    public Bitcoin getAnualMin()  {
-        String year = getLast().getDate().replaceAll("-.*","");
-        List<Bitcoin> bitcoins = getAll();
-        bitcoins.removeIf(bitcoin -> !bitcoin.getDate().replaceAll("-.*", "").equals(year));
-        bitcoins.sort(new Sorter());
-        return bitcoins.get(bitcoins.size()-1);
+    public Coin getAnualMin() {
+        String year = getLast().getDate().replaceAll("-.*", "");
+        List<Coin> coins = getAll();
+        coins.removeIf(coin -> !coin.getDate().replaceAll("-.*", "").equals(year));
+        coins.sort(new Sorter());
+        return coins.get(coins.size() - 1);
     }
 
-    public List<Bitcoin> getLastMonth() {
-        List<Bitcoin> bitcoins = bitcoinRepository.getAll();
-        return bitcoins.subList(bitcoins.size()-32, bitcoins.size());
+    public List<Coin> getLastMonth() {
+        List<Coin> coins = bitcoinRepository.getAll();
+        return coins.subList(coins.size() - 32, coins.size());
+    }
+
+    public List<Coin> getLastX(int number) {
+        List<Coin> coins = bitcoinRepository.getAll();
+        return coins.subList(coins.size() - number, coins.size());
     }
 
 
-    class Sorter implements Comparator<Bitcoin> {
+    class Sorter implements Comparator<Coin> {
         @Override
-        public int compare(Bitcoin o1, Bitcoin o2) {
+        public int compare(Coin o1, Coin o2) {
             return (int) (-o1.getPrice() + o2.getPrice());
         }
     }
