@@ -2,6 +2,8 @@ package com.example.demo.Controllers;
 
 import com.example.demo.DTOs.CoinDTO;
 import com.example.demo.Mappers.CoinMapper;
+import com.example.demo.Repositories.ElrondRepository;
+import com.example.demo.Services.ElrondService;
 import com.example.demo.Services.EthereumService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,36 +16,36 @@ import java.util.List;
 
 @Api
 @RestController
-@RequestMapping("/CoinTrader/ethereum")
-public class EthereumController {
-    public EthereumController() throws IOException {
+@RequestMapping("/CoinTrader/elrond")
+public class ElrondController {
+    public ElrondController() throws IOException {
     }
 
-    private EthereumService ethereumService = new EthereumService();
+    private ElrondService elrondService = new ElrondService();
 
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
-        return CoinMapper.mapCoinListtoCoinDTOList(ethereumService.getLastMonth());
+        return CoinMapper.mapCoinListtoCoinDTOList(elrondService.getLastMonth());
     }
 
     @GetMapping("/getMax")
     public CoinDTO getMax() {
-        return CoinMapper.mapCointoCoinDTO(ethereumService.getAllTimeMax());
+        return CoinMapper.mapCointoCoinDTO(elrondService.getAllTimeMax());
     }
 
     @GetMapping("/getLast")
     public CoinDTO getLast() {
-        return CoinMapper.mapCointoCoinDTO(ethereumService.getLast());
+        return CoinMapper.mapCointoCoinDTO(elrondService.getLast());
     }
 
     @GetMapping("/getLastX/{number}")
     public List<CoinDTO> getLastX(@PathVariable("number") int num) {
-        return CoinMapper.mapCoinListtoCoinDTOList(ethereumService.getLastX(num));
+        return CoinMapper.mapCoinListtoCoinDTOList(elrondService.getLastX(num));
     }
 
     @GetMapping(value = "/getActual")
     public CoinDTO getActual() throws IOException {
-        return CoinMapper.mapCointoCoinDTO(ethereumService.getActual());
+        return CoinMapper.mapCointoCoinDTO(elrondService.getActual());
     }
 
 }

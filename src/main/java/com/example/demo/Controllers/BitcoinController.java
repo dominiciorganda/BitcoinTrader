@@ -45,7 +45,7 @@ public class BitcoinController {
     }
 
     @GetMapping("/getLastX/{number}")
-    public  List<CoinDTO> getLastX(@PathVariable("number") int num) {
+    public List<CoinDTO> getLastX(@PathVariable("number") int num) {
         return CoinMapper.mapCoinListtoCoinDTOList(bitcoinService.getLastX(num));
     }
 
