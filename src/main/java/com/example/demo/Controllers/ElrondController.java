@@ -2,9 +2,7 @@ package com.example.demo.Controllers;
 
 import com.example.demo.DTOs.CoinDTO;
 import com.example.demo.Mappers.CoinMapper;
-import com.example.demo.Repositories.ElrondRepository;
 import com.example.demo.Services.ElrondService;
-import com.example.demo.Services.EthereumService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
