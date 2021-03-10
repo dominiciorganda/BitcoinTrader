@@ -46,4 +46,15 @@ public class EthereumController {
         return CoinMapper.mapCointoCoinDTO(ethereumService.getActual());
     }
 
+    @GetMapping("getAnualMax")
+    public CoinDTO getAnualMax() {
+        return CoinMapper.mapCointoCoinDTO(ethereumService.getAnualMax());
+    }
+
+    @GetMapping("getAnualMin")
+    public CoinDTO getAnualMin() {
+        return CoinMapper.mapCointoCoinDTO(ethereumService.getAnualMin());
+    }
+
+
 }

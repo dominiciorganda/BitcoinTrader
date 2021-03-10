@@ -54,6 +54,23 @@ public class ElrondService implements ICoinService{
         return coin;
     }
 
+
+    public Coin getAnualMax() {
+        String year = getLast().getDate().replaceAll("-.*", "");
+        List<Coin> coins = getAll();
+        coins.removeIf(coin -> !coin.getDate().replaceAll("-.*", "").equals(year));
+        coins.sort(new Sorter());
+        return coins.get(0);
+    }
+
+    public Coin getAnualMin() {
+        String year = getLast().getDate().replaceAll("-.*", "");
+        List<Coin> coins = getAll();
+        coins.removeIf(coin -> !coin.getDate().replaceAll("-.*", "").equals(year));
+        coins.sort(new Sorter());
+        return coins.get(coins.size() - 1);
+    }
+
     public List<Coin> getLastMonth() {
         List<Coin> coins = elrondRepository.getAll();
         return coins.subList(coins.size()-32, coins.size());

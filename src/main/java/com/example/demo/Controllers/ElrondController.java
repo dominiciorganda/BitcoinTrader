@@ -46,4 +46,15 @@ public class ElrondController {
         return CoinMapper.mapCointoCoinDTO(elrondService.getActual());
     }
 
+    @GetMapping("getAnualMax")
+    public CoinDTO getAnualMax() {
+        return CoinMapper.mapCointoCoinDTO(elrondService.getAnualMax());
+    }
+
+    @GetMapping("getAnualMin")
+    public CoinDTO getAnualMin() {
+        return CoinMapper.mapCointoCoinDTO(elrondService.getAnualMin());
+    }
+
+
 }

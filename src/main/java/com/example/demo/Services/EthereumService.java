@@ -51,6 +51,23 @@ public class EthereumService implements ICoinService {
         return coin;
     }
 
+
+    public Coin getAnualMax() {
+        String year = getLast().getDate().replaceAll("-.*", "");
+        List<Coin> coins = getAll();
+        coins.removeIf(coin -> !coin.getDate().replaceAll("-.*", "").equals(year));
+        coins.sort(new Sorter());
+        return coins.get(0);
+    }
+
+    public Coin getAnualMin() {
+        String year = getLast().getDate().replaceAll("-.*", "");
+        List<Coin> coins = getAll();
+        coins.removeIf(coin -> !coin.getDate().replaceAll("-.*", "").equals(year));
+        coins.sort(new Sorter());
+        return coins.get(coins.size() - 1);
+    }
+
     public Coin getLast() {
         return etherumRepository.getAll().get(etherumRepository.getAll().size() - 1);
     }
