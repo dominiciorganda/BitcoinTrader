@@ -75,7 +75,9 @@ public class BitcoinService implements ICoinService {
 
     public List<Coin> getLastX(int number) {
         List<Coin> coins = bitcoinRepository.getAll();
-        return coins.subList(coins.size() - number, coins.size());
+        if (coins.size() > number)
+            return coins.subList(coins.size() - number, coins.size());
+        return null;
     }
 
 

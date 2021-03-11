@@ -78,7 +78,9 @@ public class ElrondService implements ICoinService{
 
     public List<Coin> getLastX(int number) {
         List<Coin> coins = elrondRepository.getAll();
-        return coins.subList(coins.size()-number, coins.size());
+        if (coins.size() > number)
+            return coins.subList(coins.size() - number, coins.size());
+        return null;
     }
 
     public Coin getLast(){
