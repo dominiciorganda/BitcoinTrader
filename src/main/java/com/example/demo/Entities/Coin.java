@@ -1,7 +1,6 @@
 package com.example.demo.Entities;
 
 
-
 public class Coin {
     private String date;
     private double price;

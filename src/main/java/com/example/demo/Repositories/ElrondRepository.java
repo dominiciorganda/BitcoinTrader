@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ElrondRepository implements ICoinRepository{
+public class ElrondRepository implements ICoinRepository {
     private List<Coin> coinList = new ArrayList<>();
 
     public ElrondRepository() throws IOException {
@@ -19,8 +19,8 @@ public class ElrondRepository implements ICoinRepository{
     public void populate() throws IOException {
         String webPage = "https://min-api.cryptocompare.com/data/v2/histoday?fsym=EGLD&tsym=USD&limit=200";
         String apiKey = "32c1622d7adaead2982febecec83ac7de1ae67d1bc622ffa0f55b88d294748f1";
-        String sufix = "&api_key={"+apiKey+"}";
-        String json = new Scanner(new URL(webPage+sufix).openStream(), "UTF-8").useDelimiter("\\A").next();
+        String sufix = "&api_key={" + apiKey + "}";
+        String json = new Scanner(new URL(webPage + sufix).openStream(), "UTF-8").useDelimiter("\\A").next();
 
         json = styleJson(json);
 
@@ -30,16 +30,16 @@ public class ElrondRepository implements ICoinRepository{
         Gson gson = new Gson();
         Coin[] coins = gson.fromJson(json, Coin[].class);
         coinList.addAll(Arrays.asList(coins));
-        for (Coin coin :coinList) {
+        for (Coin coin : coinList) {
             long timestamp = Long.parseLong(coin.getDate());
-            Date d = new Date(timestamp*1000);
-            String year = d.toString().substring(24).replaceAll("\\s","");
-            String day = d.toString().substring(8,10);
-            String month = d.toString().substring(4,7);
+            Date d = new Date(timestamp * 1000);
+            String year = d.toString().substring(24).replaceAll("\\s", "");
+            String day = d.toString().substring(8, 10);
+            String month = d.toString().substring(4, 7);
 
             month = getMonth(month);
 
-            coin.setDate(""+year+"-"+month+"-"+day);
+            coin.setDate("" + year + "-" + month + "-" + day);
 //            System.out.println(coin);
         }
     }
@@ -50,7 +50,7 @@ public class ElrondRepository implements ICoinRepository{
         return coins;
     }
 
-    public String styleJson(String json){
+    public String styleJson(String json) {
         Pattern pattern = Pattern.compile("\\[.*\\]");
         Matcher matcher = pattern.matcher(json);
         if (matcher.find())
@@ -85,19 +85,43 @@ public class ElrondRepository implements ICoinRepository{
     }
 
     public String getMonth(String month) {
-        switch (month){
-            case "Jan": month = "01"; break;
-            case "Feb": month = "02"; break;
-            case "Mar": month = "03"; break;
-            case "Apr": month = "04"; break;
-            case "May": month = "05"; break;
-            case "Jun": month = "06"; break;
-            case "Jul": month = "07"; break;
-            case "Aug": month = "08"; break;
-            case "Sep": month = "09"; break;
-            case "Oct": month = "10"; break;
-            case "Nov": month = "11"; break;
-            case "Dec": month = "12"; break;
+        switch (month) {
+            case "Jan":
+                month = "01";
+                break;
+            case "Feb":
+                month = "02";
+                break;
+            case "Mar":
+                month = "03";
+                break;
+            case "Apr":
+                month = "04";
+                break;
+            case "May":
+                month = "05";
+                break;
+            case "Jun":
+                month = "06";
+                break;
+            case "Jul":
+                month = "07";
+                break;
+            case "Aug":
+                month = "08";
+                break;
+            case "Sep":
+                month = "09";
+                break;
+            case "Oct":
+                month = "10";
+                break;
+            case "Nov":
+                month = "11";
+                break;
+            case "Dec":
+                month = "12";
+                break;
         }
         return month;
     }

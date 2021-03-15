@@ -1,6 +1,5 @@
 package com.example.demo.Repositories;
 
-
 import com.example.demo.Entities.Coin;
 import com.google.gson.Gson;
 
@@ -10,23 +9,23 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-public class EthereumRepository implements ICoinRepository {
+public class DashRepository implements ICoinRepository {
     private List<Coin> coinList = new ArrayList<>();
 
-    public EthereumRepository() throws IOException {
+    public DashRepository() throws IOException {
         populate();
     }
 
+    @Override
     public void populate() throws IOException {
-        String webPage = "https://min-api.cryptocompare.com/data/v2/histoday?fsym=ETH&tsym=USD&limit=2000";
+        String webPage = "https://min-api.cryptocompare.com/data/v2/histoday?fsym=DASH&tsym=USD&limit=2000";
         String apiKey = "32c1622d7adaead2982febecec83ac7de1ae67d1bc622ffa0f55b88d294748f1";
         String sufix = "&api_key={" + apiKey + "}";
         String json = new Scanner(new URL(webPage + sufix).openStream(), "UTF-8").useDelimiter("\\A").next();
 
         json = styleJson(json);
 
-//        System.out.println(json);
+
         json = json.replaceAll("time", "date");
         json = json.replaceAll("open", "price");
         Gson gson = new Gson();
@@ -44,6 +43,13 @@ public class EthereumRepository implements ICoinRepository {
             coin.setDate("" + year + "-" + month + "-" + day);
 //            System.out.println(coin);
         }
+    }
+
+    @Override
+    public List<Coin> getAll() {
+        List<Coin> coins = new ArrayList<>();
+        coins.addAll(coinList);
+        return coins;
     }
 
     public String styleJson(String json) {
@@ -71,6 +77,7 @@ public class EthereumRepository implements ICoinRepository {
 
         json = json.replaceAll("\"conversionSymbol\"", "");
         json = json.replaceAll("\"BTC\"", "");
+        json = json.replaceAll("\"ETH\"", "");
 
         json = json.replaceAll("\\,\\:\\,\\:", "");
         json = json.replaceAll("\"direct\"", "");
@@ -120,12 +127,5 @@ public class EthereumRepository implements ICoinRepository {
                 break;
         }
         return month;
-    }
-
-
-    public List<Coin> getAll() {
-        List<Coin> coins = new ArrayList<>();
-        coins.addAll(coinList);
-        return coins;
     }
 }

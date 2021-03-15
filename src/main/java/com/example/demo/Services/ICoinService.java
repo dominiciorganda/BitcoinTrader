@@ -7,10 +7,16 @@ import java.util.List;
 
 public interface ICoinService {
     public List<Coin> getAll();
+
     public Coin getAllTimeMax();
+
     public Coin getActual() throws IOException;
+
     public Coin getAnualMax();
+
     public Coin getAnualMin();
+
     public List<Coin> getLastMonth();
+
     public List<Coin> getLastX(int number);
 }

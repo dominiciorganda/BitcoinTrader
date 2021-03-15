@@ -1,7 +1,7 @@
 package com.example.demo.Services;
 
 import com.example.demo.Entities.Coin;
-import com.example.demo.Repositories.ElrondRepository;
+import com.example.demo.Repositories.DogecoinRepository;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -13,24 +13,27 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ElrondService implements ICoinService {
-    private ElrondRepository elrondRepository = new ElrondRepository();
+public class DogecoinService implements ICoinService {
+    private DogecoinRepository dogecoinRepository = new DogecoinRepository();
 
-    public ElrondService() throws IOException {
+    public DogecoinService() throws IOException {
     }
 
+    @Override
     public List<Coin> getAll() {
-        return elrondRepository.getAll();
+        return dogecoinRepository.getAll();
     }
 
+    @Override
     public Coin getAllTimeMax() {
-        List<Coin> coins = elrondRepository.getAll();
+        List<Coin> coins = dogecoinRepository.getAll();
         coins.sort(new Sorter());
         return coins.get(0);
     }
 
+    @Override
     public Coin getActual() throws IOException {
-        String webPage = "https://min-api.cryptocompare.com/data/v2/histominute?fsym=EGLD&tsym=USD&limit=1";
+        String webPage = "https://min-api.cryptocompare.com/data/v2/histominute?fsym=DOGE&tsym=USD&limit=1";
         String apiKey = "32c1622d7adaead2982febecec83ac7de1ae67d1bc622ffa0f55b88d294748f1";
         String sufix = "&api_key={" + apiKey + "}";
         String json = new Scanner(new URL(webPage + sufix).openStream(), "UTF-8").useDelimiter("\\A").next();
@@ -38,7 +41,7 @@ public class ElrondService implements ICoinService {
         Matcher matcher = pattern.matcher(json);
         if (matcher.find())
             json = matcher.group();
-        json = elrondRepository.styleJson(json);
+        json = dogecoinRepository.styleJson(json);
         json = json.replaceAll("time", "date");
         json = json.replaceAll("open", "price");
         Gson gson = new Gson();
@@ -49,12 +52,12 @@ public class ElrondService implements ICoinService {
         String year = d.toString().substring(24).replaceAll("\\s", "");
         String day = d.toString().substring(8, 10);
         String month = d.toString().substring(4, 7);
-        month = elrondRepository.getMonth(month);
+        month = dogecoinRepository.getMonth(month);
         coin.setDate("" + year + "-" + month + "-" + day);
         return coin;
     }
 
-
+    @Override
     public Coin getAnualMax() {
         String year = getLast().getDate().replaceAll("-.*", "");
         List<Coin> coins = getAll();
@@ -63,6 +66,7 @@ public class ElrondService implements ICoinService {
         return coins.get(0);
     }
 
+    @Override
     public Coin getAnualMin() {
         String year = getLast().getDate().replaceAll("-.*", "");
         List<Coin> coins = getAll();
@@ -71,20 +75,22 @@ public class ElrondService implements ICoinService {
         return coins.get(coins.size() - 1);
     }
 
+    @Override
     public List<Coin> getLastMonth() {
-        List<Coin> coins = elrondRepository.getAll();
+        List<Coin> coins = dogecoinRepository.getAll();
         return coins.subList(coins.size() - 32, coins.size());
     }
 
+    @Override
     public List<Coin> getLastX(int number) {
-        List<Coin> coins = elrondRepository.getAll();
+        List<Coin> coins = dogecoinRepository.getAll();
         if (coins.size() > number)
             return coins.subList(coins.size() - number, coins.size());
         return null;
     }
 
     public Coin getLast() {
-        return elrondRepository.getAll().get(elrondRepository.getAll().size() - 1);
+        return dogecoinRepository.getAll().get(dogecoinRepository.getAll().size() - 1);
     }
 
     class Sorter implements Comparator<Coin> {
@@ -93,4 +99,5 @@ public class ElrondService implements ICoinService {
             return (int) (-o1.getPrice() + o2.getPrice());
         }
     }
+
 }

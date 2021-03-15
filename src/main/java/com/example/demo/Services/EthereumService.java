@@ -29,8 +29,8 @@ public class EthereumService implements ICoinService {
     public Coin getActual() throws IOException {
         String webPage = "https://min-api.cryptocompare.com/data/v2/histominute?fsym=ETH&tsym=USD&limit=1";
         String apiKey = "32c1622d7adaead2982febecec83ac7de1ae67d1bc622ffa0f55b88d294748f1";
-        String sufix = "&api_key={"+apiKey+"}";
-        String json = new Scanner(new URL(webPage+sufix).openStream(), "UTF-8").useDelimiter("\\A").next();
+        String sufix = "&api_key={" + apiKey + "}";
+        String json = new Scanner(new URL(webPage + sufix).openStream(), "UTF-8").useDelimiter("\\A").next();
         Pattern pattern = Pattern.compile("\\[.*\\]");
         Matcher matcher = pattern.matcher(json);
         if (matcher.find())
@@ -42,12 +42,12 @@ public class EthereumService implements ICoinService {
         Coin[] coins = gson.fromJson(json, Coin[].class);
         Coin coin = coins[1];
         long timestamp = Long.parseLong(coin.getDate());
-        Date d = new Date(timestamp*1000);
-        String year = d.toString().substring(24).replaceAll("\\s","");
-        String day = d.toString().substring(8,10);
-        String month = d.toString().substring(4,7);
+        Date d = new Date(timestamp * 1000);
+        String year = d.toString().substring(24).replaceAll("\\s", "");
+        String day = d.toString().substring(8, 10);
+        String month = d.toString().substring(4, 7);
         month = etherumRepository.getMonth(month);
-        coin.setDate(""+year+"-"+month+"-"+day);
+        coin.setDate("" + year + "-" + month + "-" + day);
         return coin;
     }
 
@@ -75,7 +75,7 @@ public class EthereumService implements ICoinService {
 
     public List<Coin> getLastMonth() {
         List<Coin> coins = etherumRepository.getAll();
-        return coins.subList(coins.size()-32, coins.size());
+        return coins.subList(coins.size() - 32, coins.size());
     }
 
     public List<Coin> getLastX(int number) {

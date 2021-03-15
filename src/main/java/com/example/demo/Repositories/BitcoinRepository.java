@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class BitcoinRepository implements ICoinRepository{
+public class BitcoinRepository implements ICoinRepository {
     List<Coin> coinList = new ArrayList<>();
 
 
     public BitcoinRepository() throws IOException {
         populate();
     }
-    
+
     public void populate() throws IOException {
         String webPage = "https://www.satochi.co/allBTCPrice";
         String json = new Scanner(new URL(webPage).openStream(), "UTF-8").useDelimiter("\\A").next();

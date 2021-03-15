@@ -9,7 +9,7 @@ import java.util.List;
 public class CoinMapper {
     public static CoinDTO mapCointoCoinDTO(Coin coin) {
         CoinDTO coinDTO = new CoinDTO();
-        if(coin == null)
+        if (coin == null)
             return null;
         coinDTO.setDate(coin.getDate());
         coinDTO.setPrice(coin.getPrice());
@@ -18,18 +18,18 @@ public class CoinMapper {
 
     public static Coin mapCoinDTOtoCoin(CoinDTO coinDTO) {
         Coin coin = new Coin();
-        if(coinDTO == null)
+        if (coinDTO == null)
             return null;
         coin.setDate(coinDTO.getDate());
         coin.setPrice(coinDTO.getPrice());
         return coin;
     }
 
-    public static List<CoinDTO>mapCoinListtoCoinDTOList(List<Coin> coinList){
+    public static List<CoinDTO> mapCoinListtoCoinDTOList(List<Coin> coinList) {
         List<CoinDTO> coinDTOS = new ArrayList<>();
-        if(coinList == null)
+        if (coinList == null)
             return null;
-        for(Coin coin:coinList)
+        for (Coin coin : coinList)
             coinDTOS.add(mapCointoCoinDTO(coin));
         return coinDTOS;
     }
