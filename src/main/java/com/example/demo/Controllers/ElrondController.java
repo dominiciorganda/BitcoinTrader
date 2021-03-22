@@ -24,7 +24,7 @@ public class ElrondController {
     }
 
     @Autowired
-    private ElrondService elrondService = new ElrondService();
+    private ElrondService elrondService;
 
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {

@@ -25,7 +25,7 @@ public class LitecoinController {
     }
 
     @Autowired
-    private LitecoinService litecoinService = new LitecoinService();
+    private LitecoinService litecoinService;
 
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {

@@ -3,6 +3,7 @@ package com.example.demo.Services;
 import com.example.demo.Entities.Coin;
 import com.example.demo.Repositories.DogecoinRepository;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,7 +17,9 @@ import java.util.regex.Pattern;
 
 @Service
 public class DogecoinService implements ICoinService {
-    private DogecoinRepository dogecoinRepository = new DogecoinRepository();
+
+    @Autowired
+    private DogecoinRepository dogecoinRepository;
 
     public DogecoinService() throws IOException {
     }

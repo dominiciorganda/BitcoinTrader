@@ -22,7 +22,7 @@ import java.util.List;
 public class DashController {
 
     @Autowired
-    private DashService dashService = new DashService();
+    private DashService dashService;
 
     public DashController() throws IOException {
     }

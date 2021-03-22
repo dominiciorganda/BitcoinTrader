@@ -24,7 +24,7 @@ public class EthereumController {
     }
 
     @Autowired
-    private EthereumService ethereumService = new EthereumService();
+    private EthereumService ethereumService;
 
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {

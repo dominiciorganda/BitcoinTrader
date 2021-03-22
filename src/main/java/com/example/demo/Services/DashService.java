@@ -3,6 +3,7 @@ package com.example.demo.Services;
 import com.example.demo.Entities.Coin;
 import com.example.demo.Repositories.DashRepository;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,7 +17,9 @@ import java.util.regex.Pattern;
 
 @Service
 public class DashService implements ICoinService {
-    private DashRepository dashRepository = new DashRepository();
+
+    @Autowired
+    private DashRepository dashRepository;
 
     public DashService() throws IOException {
     }

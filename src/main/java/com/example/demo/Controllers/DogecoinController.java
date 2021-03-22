@@ -22,7 +22,7 @@ import java.util.List;
 public class DogecoinController {
 
     @Autowired
-    private DogecoinService dogecoinService = new DogecoinService();
+    private DogecoinService dogecoinService;
 
     public DogecoinController() throws IOException {
     }

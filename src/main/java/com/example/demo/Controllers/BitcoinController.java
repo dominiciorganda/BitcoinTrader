@@ -23,7 +23,7 @@ import java.util.List;
 public class BitcoinController {
 
     @Autowired
-    private BitcoinService bitcoinService = new BitcoinService();
+    private BitcoinService bitcoinService;
 
     public BitcoinController() throws IOException {
     }
