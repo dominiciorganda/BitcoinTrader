@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/CoinTrader/auth")
 public class AuthController {
 
     @Autowired

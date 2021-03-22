@@ -52,12 +52,12 @@ public class DashController {
         return CoinMapper.mapCointoCoinDTO(dashService.getActual());
     }
 
-    @GetMapping("getAnualMax")
+    @GetMapping("/getAnualMax")
     public CoinDTO getAnualMax() {
         return CoinMapper.mapCointoCoinDTO(dashService.getAnualMax());
     }
 
-    @GetMapping("getAnualMin")
+    @GetMapping("/getAnualMin")
     public CoinDTO getAnualMin() {
         return CoinMapper.mapCointoCoinDTO(dashService.getAnualMin());
     }
@@ -82,7 +82,7 @@ public class DashController {
         }
     }
 
-    @GetMapping("prediction")
+    @GetMapping("/prediction")
     public ResponseEntity<?> makePrediction() {
         writeToCSV(CoinMapper.mapCoinListtoCoinDTOList(dashService.getLastX(50)));
         LocalDate localDate = LocalDate.now().plusDays(1);

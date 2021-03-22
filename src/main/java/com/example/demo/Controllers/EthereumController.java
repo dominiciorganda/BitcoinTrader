@@ -51,12 +51,12 @@ public class EthereumController {
         return CoinMapper.mapCointoCoinDTO(ethereumService.getActual());
     }
 
-    @GetMapping("getAnualMax")
+    @GetMapping("/getAnualMax")
     public CoinDTO getAnualMax() {
         return CoinMapper.mapCointoCoinDTO(ethereumService.getAnualMax());
     }
 
-    @GetMapping("getAnualMin")
+    @GetMapping("/getAnualMin")
     public CoinDTO getAnualMin() {
         return CoinMapper.mapCointoCoinDTO(ethereumService.getAnualMin());
     }
@@ -81,7 +81,7 @@ public class EthereumController {
         }
     }
 
-    @GetMapping("prediction")
+    @GetMapping("/prediction")
     public ResponseEntity<?> makePrediction() {
         writeToCSV(CoinMapper.mapCoinListtoCoinDTOList(ethereumService.getLastX(50)));
         LocalDate localDate = LocalDate.now().plusDays(1);

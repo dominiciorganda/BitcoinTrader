@@ -52,12 +52,12 @@ public class DogecoinController {
         return CoinMapper.mapCointoCoinDTO(dogecoinService.getActual());
     }
 
-    @GetMapping("getAnualMax")
+    @GetMapping("/getAnualMax")
     public CoinDTO getAnualMax() {
         return CoinMapper.mapCointoCoinDTO(dogecoinService.getAnualMax());
     }
 
-    @GetMapping("getAnualMin")
+    @GetMapping("/getAnualMin")
     public CoinDTO getAnualMin() {
         return CoinMapper.mapCointoCoinDTO(dogecoinService.getAnualMin());
     }
@@ -82,7 +82,7 @@ public class DogecoinController {
         }
     }
 
-    @GetMapping("prediction")
+    @GetMapping("/prediction")
     public ResponseEntity<?> makePrediction() {
         writeToCSV(CoinMapper.mapCoinListtoCoinDTOList(dogecoinService.getLastX(50)));
         LocalDate localDate = LocalDate.now().plusDays(1);

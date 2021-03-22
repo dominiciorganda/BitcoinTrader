@@ -53,7 +53,7 @@ public class BitcoinController {
         return CoinMapper.mapCoinListtoCoinDTOList(bitcoinService.getLastX(num));
     }
 
-    @GetMapping("prediction")
+    @GetMapping("/prediction")
     public ResponseEntity<?> makePrediction() {
         writeToCSV(CoinMapper.mapCoinListtoCoinDTOList(bitcoinService.getLastX(50)));
         LocalDate localDate = LocalDate.now().plusDays(1);
@@ -78,12 +78,12 @@ public class BitcoinController {
         return ResponseEntity.ok(coinDTOS);
     }
 
-    @GetMapping("getAnualMax")
+    @GetMapping("/getAnualMax")
     public CoinDTO getAnualMax() {
         return CoinMapper.mapCointoCoinDTO(bitcoinService.getAnualMax());
     }
 
-    @GetMapping("getAnualMin")
+    @GetMapping("/getAnualMin")
     public CoinDTO getAnualMin() {
         return CoinMapper.mapCointoCoinDTO(bitcoinService.getAnualMin());
     }

@@ -48,7 +48,6 @@ public class AuthService {
     }
 
 
-
     @Transactional
     public void register(RegisterRequest registerRequest) {
         User user = new User();
@@ -60,7 +59,6 @@ public class AuthService {
 
 //        userRepository.save(user);
         save(user);
-
 
         String token = generateVerificationToken(user);
         String message = mailContentBuilder.build("Thank you for signing up to CoinTrader, please click on the below url to activate your account : "
