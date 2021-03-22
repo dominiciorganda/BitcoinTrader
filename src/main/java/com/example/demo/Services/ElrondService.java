@@ -3,6 +3,7 @@ package com.example.demo.Services;
 import com.example.demo.Entities.Coin;
 import com.example.demo.Repositories.ElrondRepository;
 import com.google.gson.Gson;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class ElrondService implements ICoinService {
     private ElrondRepository elrondRepository = new ElrondRepository();
 

@@ -2,11 +2,13 @@ package com.example.demo.Repositories;
 
 import com.example.demo.Entities.Coin;
 import com.google.gson.Gson;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+@Repository
 public class BitcoinRepository implements ICoinRepository {
     List<Coin> coinList = new ArrayList<>();
 

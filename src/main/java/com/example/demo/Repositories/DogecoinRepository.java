@@ -2,6 +2,7 @@ package com.example.demo.Repositories;
 
 import com.example.demo.Entities.Coin;
 import com.google.gson.Gson;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,6 +10,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Repository
 public class DogecoinRepository implements ICoinRepository {
     private List<Coin> coinList = new ArrayList<>();
 
