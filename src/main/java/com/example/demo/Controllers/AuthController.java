@@ -1,6 +1,9 @@
 package com.example.demo.Controllers;
 
+import com.example.demo.DTOs.AuthenticationResponse;
+import com.example.demo.DTOs.LoginRequest;
 import com.example.demo.DTOs.RegisterRequest;
+import com.example.demo.Entities.User;
 import com.example.demo.Services.AuthService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,4 +30,10 @@ public class AuthController {
         authService.verifyAccount(token);
         return new ResponseEntity<>("Account Activated Successully", HttpStatus.OK);
     }
+
+    @PostMapping("/login")
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
+    }
+
 }

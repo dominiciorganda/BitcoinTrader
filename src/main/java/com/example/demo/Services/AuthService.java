@@ -1,5 +1,7 @@
 package com.example.demo.Services;
 
+import com.example.demo.DTOs.AuthenticationResponse;
+import com.example.demo.DTOs.LoginRequest;
 import com.example.demo.DTOs.RegisterRequest;
 import com.example.demo.Entities.NotificationEmail;
 import com.example.demo.Entities.User;
@@ -7,9 +9,15 @@ import com.example.demo.Entities.VerificationToken;
 import com.example.demo.Exceptions.CoinTraderException;
 import com.example.demo.Repositories.UserRepository;
 import com.example.demo.Repositories.VerificationTokenRepository;
+import com.example.demo.Security.JWTProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +42,12 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JWTProvider jwtProvider;
 
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
@@ -109,6 +123,22 @@ public class AuthService {
 
         return ofNullable(user1)
                 .orElseThrow(() -> new EntityExistsException("Email or username already exist: " ));
+    }
+
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String authenticationToken = jwtProvider.generateToken(authenticate);
+        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
+    }
+
+    @Transactional(readOnly = true)
+    User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
     }
 
 }
