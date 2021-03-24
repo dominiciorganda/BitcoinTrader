@@ -13,13 +13,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.util.Date;
 
 import static io.jsonwebtoken.Jwts.parser;
+
+import static com.example.demo.util.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
+
 
 @Service
 public class JWTProvider {
 
-//    @Autowired
+    //    @Autowired
     private KeyStore keyStore;
 
     @PostConstruct
@@ -36,8 +40,14 @@ public class JWTProvider {
 
     public String generateToken(Authentication authentication) {
         org.springframework.security.core.userdetails.User principal = (User) authentication.getPrincipal();
+
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + ACCESS_TOKEN_VALIDITY_SECONDS );
+
         return Jwts.builder()
                 .setSubject(principal.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
                 .signWith(getPrivateKey())
                 .compact();
     }
