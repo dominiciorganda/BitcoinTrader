@@ -6,6 +6,7 @@ import com.example.demo.Services.DogecoinService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,8 @@ public class DogecoinController {
 
     private static final String CSV_SEPARATOR = ",";
 
-    private static void writeToCSV(List<CoinDTO> coinDTOS) {
+    @Async
+    void writeToCSV(List<CoinDTO> coinDTOS) {
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("CSV\\dogecoins.csv"), "UTF-8"));
             bw.write("Date" + CSV_SEPARATOR + "Price");
@@ -86,7 +88,7 @@ public class DogecoinController {
     public ResponseEntity<?> makePrediction() {
         writeToCSV(CoinMapper.mapCoinListtoCoinDTOList(dogecoinService.getLastX(50)));
         LocalDate localDate = LocalDate.now().plusDays(1);
-        List<CoinDTO> coinDTOS = new ArrayList<>();
+        List<CoinDTO> coinDTOS = new ArrayList<>(getLastX(6));
         try {
             String argument = localDate.toString().replaceAll("\\-", "");
 
