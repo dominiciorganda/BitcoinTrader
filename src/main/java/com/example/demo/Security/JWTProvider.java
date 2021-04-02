@@ -42,7 +42,7 @@ public class JWTProvider {
         org.springframework.security.core.userdetails.User principal = (User) authentication.getPrincipal();
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + ACCESS_TOKEN_VALIDITY_SECONDS );
+        Date expiryDate = new Date(now.getTime() + ACCESS_TOKEN_VALIDITY_SECONDS);
 
         return Jwts.builder()
                 .setSubject(principal.getUsername())

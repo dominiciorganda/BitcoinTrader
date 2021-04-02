@@ -9,20 +9,22 @@ import java.time.Instant;
 @Table(name = "token", schema = "cointrader")
 public class VerificationToken {
     private long id;
-//    private long user_id;
+    //    private long user_id;
     private String token;
 
     @Access(AccessType.PROPERTY)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     public User getUser() {
         return user;
     }
+
     private User user;
 
     public void setUser(User user) {
         this.user = user;
     }
+
     private Instant expiryDate;
 
     @Id

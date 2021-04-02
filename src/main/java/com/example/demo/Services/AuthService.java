@@ -94,7 +94,7 @@ public class AuthService {
         return passwordEncoder.encode(password);
     }
 
-    public void verifyAccount(String token)  {
+    public void verifyAccount(String token) {
         Optional<VerificationToken> verificationTokenOptional = verificationTokenRepository.findByToken(token);
         verificationTokenOptional.orElseThrow(() -> new CoinTraderException("Invalid Token"));
         fetchUserAndEnable(verificationTokenOptional.get());
@@ -116,13 +116,13 @@ public class AuthService {
         optionalUser1 = userRepository.findByUsername(user.getUsername());
 
         User user1;
-        if(optionalUser.isEmpty() && optionalUser1.isEmpty())
+        if (optionalUser.isEmpty() && optionalUser1.isEmpty())
             user1 = userRepository.save(user);
         else
-            user1= null;
+            user1 = null;
 
         return ofNullable(user1)
-                .orElseThrow(() -> new EntityExistsException("Email or username already exist: " ));
+                .orElseThrow(() -> new EntityExistsException("Email or username already exist: "));
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
