@@ -24,7 +24,7 @@ public class WalletController {
     private WalletService walletService;
 
     @PostMapping("/buy")
-    public ResponseEntity register(@RequestBody BuyTransactionDTO buyTransactionDTO) {
+    public ResponseEntity buy(@RequestBody BuyTransactionDTO buyTransactionDTO) {
         walletService.addTransaction(buyTransactionDTO);
         return new ResponseEntity<>("Transaction added", HttpStatus.OK);
     }
