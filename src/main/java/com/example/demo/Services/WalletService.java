@@ -1,12 +1,9 @@
 package com.example.demo.Services;
 
-import com.example.demo.DTOs.BuyTransactionDTO;
-import com.example.demo.Entities.BuytransactionEntity;
-import com.example.demo.Entities.CoinTypes;
-import com.example.demo.Entities.WalletCoin;
-import com.example.demo.Entities.User;
-import com.example.demo.Mappers.BuyTransactionMapper;
-import com.example.demo.Repositories.BuyTransactionRepository;
+import com.example.demo.DTOs.TransactionDTO;
+import com.example.demo.Entities.*;
+import com.example.demo.Mappers.TransactionMapper;
+import com.example.demo.Repositories.TransactionRepository;
 import com.example.demo.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +20,7 @@ import static java.time.Instant.now;
 public class WalletService {
 
     @Autowired
-    private BuyTransactionRepository buyTransactionRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -49,40 +46,46 @@ public class WalletService {
     @Autowired
     private AuthService authService;
 
-    public BuytransactionEntity addTransaction(BuyTransactionDTO buyTransactionDTO) {
-        BuytransactionEntity buytransactionEntity = BuyTransactionMapper.mapTransactionDTOtoTransaction(buyTransactionDTO);
+    public TransactionEntity addTransaction(TransactionDTO transactionDTO) {
+        TransactionEntity transactionEntity = TransactionMapper.mapTransactionDTOtoTransaction(transactionDTO);
 
         Optional<User> optionalUser;
         optionalUser = userRepository.findByUsername(authService.getCurrentUser().getUsername());
         User user1;
         user1 = optionalUser.orElse(null);
 
-        buytransactionEntity.setUser(user1);
-        buytransactionEntity.setTransactionDate(now());
-        return buyTransactionRepository.save(buytransactionEntity);
+        transactionEntity.setUser(user1);
+        transactionEntity.setTransactionDate(now());
+        return transactionRepository.save(transactionEntity);
     }
 
-    public List<BuytransactionEntity> getUserTransactions() {
+    public List<TransactionEntity> getUserTransactions() {
         String username = authService.getCurrentUser().getUsername();
         Optional<User> optionalUser;
         optionalUser = userRepository.findByUsername(username);
         User user1;
         user1 = optionalUser.orElse(null);
-        return buyTransactionRepository.findAllByUser(user1);
+        return transactionRepository.findAllByUser(user1);
     }
 
     public List<WalletCoin> getWalletCoins() throws IOException {
         List<WalletCoin> walletCoins = new ArrayList<>();
-        List<BuytransactionEntity> transactions = getUserTransactions();
+        List<TransactionEntity> transactions = getUserTransactions();
 
-        for (BuytransactionEntity transaction : transactions) {
+        for (TransactionEntity transaction : transactions) {
             if (!isPresent(walletCoins, transaction))
                 walletCoins.add(new WalletCoin(transaction.getCoin(), transaction.getAmount(),transaction.getPaidPrice()));
             else {
                 for (WalletCoin walletCoin : walletCoins)
                     if (walletCoin.getCoinName().equals(transaction.getCoin())){
-                        walletCoin.setAmount(walletCoin.getAmount() + transaction.getAmount());
-                        walletCoin.setPaid(walletCoin.getPaid()+transaction.getPaidPrice());
+                        if(transaction.getType() == TransactionType.BUY){
+                            walletCoin.setAmount(walletCoin.getAmount() + transaction.getAmount());
+                            walletCoin.setPaid(walletCoin.getPaid() + transaction.getPaidPrice());
+                        }
+                        if(transaction.getType() == TransactionType.SELL){
+                            walletCoin.setAmount(walletCoin.getAmount() - transaction.getAmount());
+                            walletCoin.setPaid(walletCoin.getPaid() - transaction.getPaidPrice());
+                        }
                     }
             }
         }
@@ -121,7 +124,7 @@ public class WalletService {
         }
     }
 
-    private boolean isPresent(List<WalletCoin> walletCoins, BuytransactionEntity transaction) {
+    private boolean isPresent(List<WalletCoin> walletCoins, TransactionEntity transaction) {
         for (WalletCoin walletCoin : walletCoins)
             if (walletCoin.getCoinName().equals(transaction.getCoin()))
                 return true;

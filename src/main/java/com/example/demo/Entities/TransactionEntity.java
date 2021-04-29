@@ -1,12 +1,11 @@
 package com.example.demo.Entities;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "buytransaction", schema = "cointrader")
-public class BuytransactionEntity {
+@Table(name = "transaction", schema = "cointrader")
+public class TransactionEntity {
     private long id;
     private Instant transactionDate;
     //    private long userId;
@@ -14,6 +13,7 @@ public class BuytransactionEntity {
     private double amount;
     private double actualPrice;
     private double paidPrice;
+    private TransactionType type;
 
     @Access(AccessType.PROPERTY)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -72,6 +72,17 @@ public class BuytransactionEntity {
     }
 
     @Basic
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
+    @Basic
     @Column(name = "amount")
     public double getAmount() {
         return amount;
@@ -106,7 +117,7 @@ public class BuytransactionEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BuytransactionEntity that = (BuytransactionEntity) o;
+        TransactionEntity that = (TransactionEntity) o;
 
         if (id != that.id) return false;
 //        if (userId != that.userId) return false;

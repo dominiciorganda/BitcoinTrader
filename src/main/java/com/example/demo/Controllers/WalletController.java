@@ -1,9 +1,8 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.DTOs.BuyTransactionDTO;
+import com.example.demo.DTOs.TransactionDTO;
 import com.example.demo.DTOs.WalletCoinDTO;
-import com.example.demo.Entities.WalletCoin;
-import com.example.demo.Mappers.BuyTransactionMapper;
+import com.example.demo.Mappers.TransactionMapper;
 import com.example.demo.Mappers.WalletCoinMapper;
 import com.example.demo.Services.WalletService;
 import io.swagger.annotations.Api;
@@ -23,15 +22,15 @@ public class WalletController {
     @Autowired
     private WalletService walletService;
 
-    @PostMapping("/buy")
-    public ResponseEntity buy(@RequestBody BuyTransactionDTO buyTransactionDTO) {
-        walletService.addTransaction(buyTransactionDTO);
+    @PostMapping("/makeTransaction")
+    public ResponseEntity makeTransaction(@RequestBody TransactionDTO transactionDTO) {
+        walletService.addTransaction(transactionDTO);
         return new ResponseEntity<>("Transaction added", HttpStatus.OK);
     }
 
     @GetMapping("/allTransactions")
-    public List<BuyTransactionDTO> getAllTransactions() {
-        return BuyTransactionMapper.mapTransactionListtoTransactionDTOList(walletService.getUserTransactions());
+    public List<TransactionDTO> getAllTransactions() {
+        return TransactionMapper.mapTransactionListtoTransactionDTOList(walletService.getUserTransactions());
     }
 
     @GetMapping("/getWallet")
