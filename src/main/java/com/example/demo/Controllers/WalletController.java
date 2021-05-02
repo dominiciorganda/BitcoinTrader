@@ -1,6 +1,7 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.DTOs.TransactionDTO;
+import com.example.demo.DTOs.TransactionDateDTO;
 import com.example.demo.DTOs.WalletCoinDTO;
 import com.example.demo.Mappers.TransactionMapper;
 import com.example.demo.Mappers.WalletCoinMapper;
@@ -29,8 +30,8 @@ public class WalletController {
     }
 
     @GetMapping("/allTransactions")
-    public List<TransactionDTO> getAllTransactions() {
-        return TransactionMapper.mapTransactionListtoTransactionDTOList(walletService.getUserTransactions());
+    public List<TransactionDateDTO> getAllTransactions() {
+        return TransactionMapper.mapTransactionListtoTransactionDateDTOList(walletService.getUserTransactions());
     }
 
     @GetMapping("/getWallet")
