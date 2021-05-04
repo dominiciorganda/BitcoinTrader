@@ -5,6 +5,7 @@ import com.example.demo.Entities.*;
 import com.example.demo.Mappers.TransactionMapper;
 import com.example.demo.Repositories.TransactionRepository;
 import com.example.demo.Repositories.UserRepository;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 import static java.time.Instant.now;
 
@@ -54,11 +56,13 @@ public class WalletService {
         User user1;
         user1 = optionalUser.orElse(null);
         if (transactionEntity.getType() == TransactionType.BUY) {
-            user1.setMoney(user1.getMoney() - transactionEntity.getPaidPrice());
+            double newMoney = Precision.round(user1.getMoney() - transactionEntity.getPaidPrice(),2);
+            user1.setMoney(newMoney);
             userRepository.save(user1);
         }
         if (transactionEntity.getType() == TransactionType.SELL) {
-            user1.setMoney(user1.getMoney() + transactionEntity.getPaidPrice());
+            double newMoney = Precision.round(user1.getMoney() + transactionEntity.getPaidPrice(),2);
+            user1.setMoney(newMoney);
             userRepository.save(user1);
         }
 
