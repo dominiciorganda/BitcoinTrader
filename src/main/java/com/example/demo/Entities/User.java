@@ -13,6 +13,7 @@ public class User {
     private Boolean enabled;
     private String password;
     private String username;
+    private double money;
 
     @Id
     @Column(name = "user_id")
@@ -73,6 +74,16 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Basic
+    @Column(name = "money")
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
     }
 
     @Override

@@ -70,6 +70,7 @@ public class AuthService {
         user.setPassword(encodePassword(registerRequest.getPassword()));
         user.setCreated(now());
         user.setEnabled(false);
+        user.setMoney(0);
 
 //        userRepository.save(user);
         save(user);
@@ -130,7 +131,10 @@ public class AuthService {
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String authenticationToken = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
+
+        Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
+        double money = optionalUser.get().getMoney();
+        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername(), money);
     }
 
     @Transactional(readOnly = true)

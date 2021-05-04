@@ -39,7 +39,6 @@ public class WalletCoin {
     }
 
 
-
     public WalletCoin(CoinTypes coinName, double amount) {
         this.coinName = coinName;
         this.amount = amount;

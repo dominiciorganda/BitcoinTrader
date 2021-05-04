@@ -53,6 +53,14 @@ public class WalletService {
         optionalUser = userRepository.findByUsername(authService.getCurrentUser().getUsername());
         User user1;
         user1 = optionalUser.orElse(null);
+        if (transactionEntity.getType() == TransactionType.BUY) {
+            user1.setMoney(user1.getMoney() - transactionEntity.getPaidPrice());
+            userRepository.save(user1);
+        }
+        if (transactionEntity.getType() == TransactionType.SELL) {
+            user1.setMoney(user1.getMoney() + transactionEntity.getPaidPrice());
+            userRepository.save(user1);
+        }
 
         transactionEntity.setUser(user1);
         transactionEntity.setTransactionDate(now());
@@ -74,15 +82,15 @@ public class WalletService {
 
         for (TransactionEntity transaction : transactions) {
             if (!isPresent(walletCoins, transaction))
-                walletCoins.add(new WalletCoin(transaction.getCoin(), transaction.getAmount(),transaction.getPaidPrice()));
+                walletCoins.add(new WalletCoin(transaction.getCoin(), transaction.getAmount(), transaction.getPaidPrice()));
             else {
                 for (WalletCoin walletCoin : walletCoins)
-                    if (walletCoin.getCoinName().equals(transaction.getCoin())){
-                        if(transaction.getType() == TransactionType.BUY){
+                    if (walletCoin.getCoinName().equals(transaction.getCoin())) {
+                        if (transaction.getType() == TransactionType.BUY) {
                             walletCoin.setAmount(walletCoin.getAmount() + transaction.getAmount());
                             walletCoin.setPaid(walletCoin.getPaid() + transaction.getPaidPrice());
                         }
-                        if(transaction.getType() == TransactionType.SELL){
+                        if (transaction.getType() == TransactionType.SELL) {
                             walletCoin.setAmount(walletCoin.getAmount() - transaction.getAmount());
                             walletCoin.setPaid(walletCoin.getPaid() - transaction.getPaidPrice());
                         }
