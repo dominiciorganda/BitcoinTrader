@@ -34,6 +34,11 @@ public class BitcoinController {
         return CoinMapper.mapCoinListtoCoinDTOList(bitcoinService.getLastMonth());
     }
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(bitcoinService.getAll());
+    }
+
     @GetMapping("/getMax")
     public CoinDTO getMax() {
         return CoinMapper.mapCointoCoinDTO(bitcoinService.getAllTimeMax());

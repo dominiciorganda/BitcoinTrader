@@ -3,6 +3,7 @@ package com.example.demo.Controllers;
 import com.example.demo.DTOs.TransactionDTO;
 import com.example.demo.DTOs.TransactionDateDTO;
 import com.example.demo.DTOs.WalletCoinDTO;
+import com.example.demo.Entities.Coin;
 import com.example.demo.Mappers.TransactionMapper;
 import com.example.demo.Mappers.WalletCoinMapper;
 import com.example.demo.Services.WalletService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 @Api
@@ -37,6 +39,11 @@ public class WalletController {
     @GetMapping("/getWallet")
     public List<WalletCoinDTO> getWallet() throws IOException {
         return WalletCoinMapper.mapWalletCoinListtoWalletCoinDTOList(walletService.getWalletCoins());
+    }
+
+    @GetMapping("/getPortfolio")
+    public List<Coin> getPortfolio() throws IOException, ParseException {
+        return walletService.getWalletCoinsPortfolio();
     }
 
 

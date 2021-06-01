@@ -10,9 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 
 import static java.time.Instant.now;
@@ -56,12 +61,12 @@ public class WalletService {
         User user1;
         user1 = optionalUser.orElse(null);
         if (transactionEntity.getType() == TransactionType.BUY) {
-            double newMoney = Precision.round(user1.getMoney() - transactionEntity.getPaidPrice(),2);
+            double newMoney = Precision.round(user1.getMoney() - transactionEntity.getPaidPrice(), 2);
             user1.setMoney(newMoney);
             userRepository.save(user1);
         }
         if (transactionEntity.getType() == TransactionType.SELL) {
-            double newMoney = Precision.round(user1.getMoney() + transactionEntity.getPaidPrice(),2);
+            double newMoney = Precision.round(user1.getMoney() + transactionEntity.getPaidPrice(), 2);
             user1.setMoney(newMoney);
             userRepository.save(user1);
         }
@@ -142,4 +147,93 @@ public class WalletService {
                 return true;
         return false;
     }
+
+    public List<Coin> getWalletCoinsPortfolio() throws ParseException {
+        List<Coin> values = new ArrayList<>();
+
+        Optional<User> optionalUser;
+        optionalUser = userRepository.findByUsername(authService.getCurrentUser().getUsername());
+        User user1;
+        user1 = optionalUser.orElse(null);
+        List<CoinAmount> amounts = new ArrayList<>();
+        for (CoinTypes coinTypes : CoinTypes.values())
+            amounts.add(new CoinAmount(coinTypes, 0));
+
+        List<TransactionEntity> userTransactions = transactionRepository.findAllByUser(user1);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        format = format.withLocale(Locale.ENGLISH);
+        LocalDate actualDate = LocalDate.parse(userTransactions.get(0).getTransactionDate().toString(), format);
+        List<DateCoinAmounts> dateCoinAmounts = new ArrayList<>();
+
+//        System.out.println(actualDate);
+
+        for (TransactionEntity transactionEntity : userTransactions) {
+            LocalDate date = LocalDate.parse(transactionEntity.getTransactionDate().toString(), format);
+            if (actualDate.compareTo(date) == 0) {
+                CoinAmount actual = getCoinAmount(amounts, transactionEntity.getCoin());
+                if (transactionEntity.getType() == TransactionType.BUY)
+                    actual.setAmount(actual.getAmount() + transactionEntity.getAmount());
+                else
+                    actual.setAmount(actual.getAmount() - transactionEntity.getAmount());
+            } else if (actualDate.compareTo(date) < 0) {
+                dateCoinAmounts.add(new DateCoinAmounts(actualDate, amounts));
+//                System.out.println(actualDate);
+                actualDate = date;
+                CoinAmount actual = getCoinAmount(amounts, transactionEntity.getCoin());
+                if (transactionEntity.getType() == TransactionType.BUY)
+                    actual.setAmount(actual.getAmount() + transactionEntity.getAmount());
+                else
+                    actual.setAmount(actual.getAmount() - transactionEntity.getAmount());
+            }
+        }
+//        System.out.println(actualDate);
+        dateCoinAmounts.add(new DateCoinAmounts(actualDate, amounts));
+        LocalDate actual = LocalDate.now();
+        for (int i = 0; i < dateCoinAmounts.size(); i++) {
+            int length;
+            if (i != dateCoinAmounts.size() - 1)
+                length = (int) ChronoUnit.DAYS.between(dateCoinAmounts.get(i).getDate(), dateCoinAmounts.get(i + 1).getDate());
+            else
+                length = (int) ChronoUnit.DAYS.between(dateCoinAmounts.get(i).getDate(), actual);
+            List<Coin> prices = calculatePrice(dateCoinAmounts.get(i), length);
+            values.addAll(prices);
+        }
+
+        return values;
+    }
+
+    private List<Coin> calculatePrice(DateCoinAmounts dateCoinAmounts, int length) {
+        LocalDate actual = LocalDate.now();
+        long elapsedDays = ChronoUnit.DAYS.between(dateCoinAmounts.getDate(), actual);
+        List<CoinAmount> amounts = dateCoinAmounts.getCoinAmountList();
+        List<Coin> prices = new ArrayList<>();
+        double price = 0;
+        LocalDate date = dateCoinAmounts.getDate();
+        int i = 0;
+
+        while (i < length) {
+            price = 0;
+            price += amounts.get(0).getAmount() * bitcoinService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(1).getAmount() * binanceCoinService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(2).getAmount() * bitcoinCashService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(3).getAmount() * dashService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(4).getAmount() * dogecoinService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(5).getAmount() * elrondService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(6).getAmount() * ethereumService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(7).getAmount() * fileCoinService.getLastX((int) elapsedDays).get(i).getPrice();
+            price += amounts.get(8).getAmount() * litecoinService.getLastX((int) elapsedDays).get(i).getPrice();
+            prices.add(new Coin(date.toString(), price));
+            date = date.plusDays(1);
+            i++;
+        }
+        return prices;
+    }
+
+    private CoinAmount getCoinAmount(List<CoinAmount> coinAmounts, CoinTypes coinTypes) {
+        for (CoinAmount coinAmount : coinAmounts)
+            if (coinAmount.getName() == coinTypes)
+                return coinAmount;
+        return null;
+    }
+
 }
