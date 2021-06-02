@@ -19,7 +19,7 @@ public class ElrondRepository implements ICoinRepository {
     }
 
     public void populate() throws IOException {
-        String webPage = "https://min-api.cryptocompare.com/data/v2/histoday?fsym=EGLD&tsym=USD&limit=200";
+        String webPage = "https://min-api.cryptocompare.com/data/v2/histoday?fsym=EGLD&tsym=USD&limit=250";
         String apiKey = "32c1622d7adaead2982febecec83ac7de1ae67d1bc622ffa0f55b88d294748f1";
         String sufix = "&api_key={" + apiKey + "}";
         String json = new Scanner(new URL(webPage + sufix).openStream(), "UTF-8").useDelimiter("\\A").next();

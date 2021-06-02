@@ -95,7 +95,7 @@ public class ElrondService implements ICoinService {
     class Sorter implements Comparator<Coin> {
         @Override
         public int compare(Coin o1, Coin o2) {
-            return (int) (-o1.getPrice() + o2.getPrice());
+            return Double.compare(o2.getPrice(), o1.getPrice());
         }
     }
 }
