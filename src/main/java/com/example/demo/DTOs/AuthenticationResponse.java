@@ -4,6 +4,14 @@ public class AuthenticationResponse {
     private String authenticationToken;
     private String username;
     private double money;
+    private String email;
+
+    public AuthenticationResponse(String authenticationToken, String username, double money, String email) {
+        this.authenticationToken = authenticationToken;
+        this.username = username;
+        this.money = money;
+        this.email = email;
+    }
 
     public AuthenticationResponse(String authenticationToken, String username, double money) {
         this.authenticationToken = authenticationToken;
@@ -17,6 +25,14 @@ public class AuthenticationResponse {
     }
 
     public AuthenticationResponse() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAuthenticationToken() {

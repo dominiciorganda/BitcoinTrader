@@ -28,6 +28,11 @@ public class DashController {
     public DashController() throws IOException {
     }
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(dashService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(dashService.getLastMonth());

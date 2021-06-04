@@ -29,6 +29,11 @@ public class FileCoinController {
     @Autowired
     private FileCoinService fileCoinService;
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(fileCoinService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(fileCoinService.getLastMonth());

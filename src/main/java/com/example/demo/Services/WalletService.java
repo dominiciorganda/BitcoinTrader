@@ -148,7 +148,7 @@ public class WalletService {
         return false;
     }
 
-    public List<Coin> getWalletCoinsPortfolio() throws ParseException {
+    public List<Coin> getWalletCoinsPortfolio() throws ParseException, IOException {
         List<Coin> values = new ArrayList<>();
 
         Optional<User> optionalUser;
@@ -162,6 +162,10 @@ public class WalletService {
         List<TransactionEntity> userTransactions = transactionRepository.findAllByUser(user1);
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
         format = format.withLocale(Locale.ENGLISH);
+
+        if (userTransactions == null || userTransactions.isEmpty())
+            return values;
+
         LocalDate actualDate = LocalDate.parse(userTransactions.get(0).getTransactionDate().toString(), format);
         List<DateCoinAmounts> dateCoinAmounts = new ArrayList<>();
 
@@ -175,8 +179,10 @@ public class WalletService {
                     actual.setAmount(actual.getAmount() + transactionEntity.getAmount());
                 else
                     actual.setAmount(actual.getAmount() - transactionEntity.getAmount());
+
             } else if (actualDate.compareTo(date) < 0) {
                 dateCoinAmounts.add(new DateCoinAmounts(actualDate, amounts));
+//                System.out.println(amounts);
 //                System.out.println(actualDate);
                 actualDate = date;
                 CoinAmount actual = getCoinAmount(amounts, transactionEntity.getCoin());
@@ -189,6 +195,7 @@ public class WalletService {
 //        System.out.println(actualDate);
         dateCoinAmounts.add(new DateCoinAmounts(actualDate, amounts));
         LocalDate actual = LocalDate.now();
+//        System.out.println(dateCoinAmounts.size());
         for (int i = 0; i < dateCoinAmounts.size(); i++) {
             int length;
             if (i != dateCoinAmounts.size() - 1)
@@ -196,10 +203,30 @@ public class WalletService {
             else
                 length = (int) ChronoUnit.DAYS.between(dateCoinAmounts.get(i).getDate(), actual);
             List<Coin> prices = calculatePrice(dateCoinAmounts.get(i), length);
+//            System.out.println(dateCoinAmounts.get(i).getCoinAmountList());
+//            System.out.println(i);
             values.addAll(prices);
         }
+        values.add(calculateActual(dateCoinAmounts.get(dateCoinAmounts.size()-1).getCoinAmountList()));
 
         return values;
+    }
+
+    private Coin calculateActual(List<CoinAmount> amounts) throws IOException {
+        LocalDate actual = LocalDate.now();
+        double price = 0;
+        price += amounts.get(0).getAmount() * bitcoinService.getActual().getPrice();
+        price += amounts.get(1).getAmount() * binanceCoinService.getActual().getPrice();
+        price += amounts.get(2).getAmount() * bitcoinCashService.getActual().getPrice();
+        price += amounts.get(3).getAmount() * dashService.getActual().getPrice();
+        price += amounts.get(4).getAmount() * dogecoinService.getActual().getPrice();
+        price += amounts.get(5).getAmount() * elrondService.getActual().getPrice();
+        price += amounts.get(6).getAmount() * ethereumService.getActual().getPrice();
+        price += amounts.get(7).getAmount() * fileCoinService.getActual().getPrice();
+        price += amounts.get(8).getAmount() * litecoinService.getActual().getPrice();
+        Coin coin = new Coin(actual.toString(), price);
+        return coin;
+
     }
 
     private List<Coin> calculatePrice(DateCoinAmounts dateCoinAmounts, int length) {
@@ -210,6 +237,7 @@ public class WalletService {
         double price = 0;
         LocalDate date = dateCoinAmounts.getDate();
         int i = 0;
+//        System.out.println(amounts);
 
         while (i < length) {
             price = 0;

@@ -4,6 +4,11 @@ public class CoinAmount {
     private CoinTypes name;
     private double amount;
 
+    public CoinAmount(CoinAmount coinAmount) {
+        this.name = coinAmount.getName();
+        this.amount = coinAmount.getAmount();
+    }
+
     @Override
     public String toString() {
         return "CoinAmount{" +

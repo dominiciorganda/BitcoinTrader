@@ -28,6 +28,11 @@ public class DogecoinController {
     public DogecoinController() throws IOException {
     }
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(dogecoinService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(dogecoinService.getLastMonth());

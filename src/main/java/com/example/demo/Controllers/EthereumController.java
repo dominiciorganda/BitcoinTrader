@@ -27,6 +27,11 @@ public class EthereumController {
     @Autowired
     private EthereumService ethereumService;
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(ethereumService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(ethereumService.getLastMonth());

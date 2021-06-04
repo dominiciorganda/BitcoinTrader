@@ -29,6 +29,11 @@ public class BitcoinCashController {
     @Autowired
     private BitcoinCashService bitcoinCashService;
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(bitcoinCashService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(bitcoinCashService.getLastMonth());

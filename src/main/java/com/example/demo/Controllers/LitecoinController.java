@@ -28,6 +28,11 @@ public class LitecoinController {
     @Autowired
     private LitecoinService litecoinService;
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(litecoinService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(litecoinService.getLastMonth());

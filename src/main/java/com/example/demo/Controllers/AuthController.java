@@ -1,6 +1,7 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.DTOs.AuthenticationResponse;
+import com.example.demo.DTOs.ChangePasswordRequest;
 import com.example.demo.DTOs.LoginRequest;
 import com.example.demo.DTOs.RegisterRequest;
 import com.example.demo.Entities.User;
@@ -36,6 +37,14 @@ public class AuthController {
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        boolean changed = authService.changePassword(changePasswordRequest);
+        if (changed)
+            return new ResponseEntity<>("Password Changed Succesfully", HttpStatus.OK);
+        return new ResponseEntity<>("Error", HttpStatus.FORBIDDEN);
     }
 
 

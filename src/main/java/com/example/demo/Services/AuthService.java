@@ -1,6 +1,7 @@
 package com.example.demo.Services;
 
 import com.example.demo.DTOs.AuthenticationResponse;
+import com.example.demo.DTOs.ChangePasswordRequest;
 import com.example.demo.DTOs.LoginRequest;
 import com.example.demo.DTOs.RegisterRequest;
 import com.example.demo.Entities.NotificationEmail;
@@ -13,6 +14,7 @@ import com.example.demo.Security.JWTProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -134,7 +136,8 @@ public class AuthService {
 
         Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
         double money = optionalUser.get().getMoney();
-        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername(), money);
+        String email = optionalUser.get().getEmail();
+        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername(), money, email);
     }
 
     @Transactional(readOnly = true)
@@ -145,4 +148,13 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
     }
 
+    public boolean changePassword(ChangePasswordRequest changePasswordRequest) {
+        User user = getCurrentUser();
+        boolean isCorrectPassword = passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword());
+        if (!isCorrectPassword)
+            return false;
+        user.setPassword(encodePassword(changePasswordRequest.getNewPassword()));
+        userRepository.save(user);
+        return true;
+    }
 }

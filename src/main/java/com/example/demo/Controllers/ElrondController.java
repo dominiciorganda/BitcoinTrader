@@ -27,6 +27,11 @@ public class ElrondController {
     @Autowired
     private ElrondService elrondService;
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(elrondService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(elrondService.getLastMonth());

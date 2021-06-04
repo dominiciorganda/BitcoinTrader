@@ -27,6 +27,11 @@ public class BinanceCoinController {
     @Autowired
     private BinanceCoinService binanceCoinService;
 
+    @GetMapping("/getAll")
+    public List<CoinDTO> getAll() {
+        return CoinMapper.mapCoinListtoCoinDTOList(binanceCoinService.getAll());
+    }
+
     @GetMapping("/getLastMonth")
     public List<CoinDTO> getLastMonth() {
         return CoinMapper.mapCoinListtoCoinDTOList(binanceCoinService.getLastMonth());
