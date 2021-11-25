@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Api
 @RestController
 @RequestMapping("/CoinTrader/funds")
+@CrossOrigin
 public class FundsController {
 
     @Autowired

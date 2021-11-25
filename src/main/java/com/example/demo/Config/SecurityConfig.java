@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/CoinTrader/auth/**")
                 .permitAll()
-                .antMatchers(HttpMethod.GET, "/bitcoin/**")
+                .antMatchers(HttpMethod.GET, "/CoinTrader/bitcoin/**")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/ethereum/**")
                 .permitAll()

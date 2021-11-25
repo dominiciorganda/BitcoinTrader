@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Api
 @RestController
 @RequestMapping("/CoinTrader/auth")
+@CrossOrigin
 public class AuthController {
 
     @Autowired

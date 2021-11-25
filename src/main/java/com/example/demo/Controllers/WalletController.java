@@ -20,6 +20,7 @@ import java.util.List;
 @Api
 @RestController
 @RequestMapping("/CoinTrader/wallet")
+@CrossOrigin
 public class WalletController {
 
     @Autowired
